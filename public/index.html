@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Chat App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        #chatbox {
+            width: 100%;
+            height: 400px;
+            border: 1px solid #ccc;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #fff;
+        }
+        #userInput {
+            width: calc(100% - 70px);
+            padding: 10px;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        #sendBtn {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Political ChatBot</h1>
+<div id="chatbox"></div>
+
+<input type="text" id="userInput" placeholder="Type your message here..." />
+<button id="sendBtn">Send</button>
+
+<script>
+    document.getElementById('sendBtn').addEventListener('click', async () => {
+        const userInput = document.getElementById('userInput').value;
+
+        if (!userInput.trim()) return; // Ignore empty inputs
+
+        // Append the user's message to the chatbox
+        const chatbox = document.getElementById('chatbox');
+        chatbox.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+        document.getElementById('userInput').value = '';
+
+        // Send the message to the server
+        try {
+            const response = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: userInput })
+            });
+
+            const data = await response.json();
+            chatbox.innerHTML += `<p><strong>GPT:</strong> ${data.message}</p>`;
+            chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+        } catch (error) {
+            console.error('Error sending message:', error);
+            chatbox.innerHTML += `<p><strong>Error:</strong> Failed to get a response.</p>`;
+        }
+    });
+</script>
+
+</body>
+</html>
