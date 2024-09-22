@@ -12,7 +12,7 @@ app.use(express.static('public')); // Serve static files from the public directo
 
 // OpenAI API configuration
 const openai = new OpenAI({
-    apiKey: "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", // Replace with your actual API key
+ // Replace with your actual key
 });
 
 // Endpoint to handle chat messages
